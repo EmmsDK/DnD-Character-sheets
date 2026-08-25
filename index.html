@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D&D Character Sheet Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">3.5e / Pathfinder character planner</p>
+        <h1>Dungeon & Dragons Character Sheet Studio</h1>
+        <p>Build a character in a classic sheet layout — BAB attacks, three saves, skill ranks, feats and spells.</p>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" id="new-btn" class="ghost">New</button>
+        <button type="button" id="export-btn" class="ghost">Export JSON</button>
+        <button type="button" id="import-btn" class="ghost">Import JSON</button>
+        <input type="file" id="import-input" accept="application/json" hidden />
+        <button type="button" id="print-btn">Print / Save PDF</button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="editor-panel" aria-label="Character editor">
+        <div class="panel-card">
+          <h2>Identity</h2>
+          <div class="field-grid">
+            <label>Character Name<input id="name" type="text" placeholder="Tommen" /></label>
+            <label>Race<input id="race" type="text" placeholder="Half-Elf" /></label>
+            <label>Alignment<input id="alignment" type="text" placeholder="Neutral" /></label>
+            <label>Class &amp; Level<input id="className" type="text" placeholder="Ranger (8)" /></label>
+            <label>Height<input id="height" type="text" placeholder="6'4" /></label>
+            <label>Weight<input id="weight" type="text" placeholder="170 lbs" /></label>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h2>Ability Scores</h2>
+          <div class="ability-edit-grid">
+            <span class="ability-edit-head">Ability</span>
+            <span class="ability-edit-head">Score</span>
+            <span class="ability-edit-head">Enh.</span>
+            <span></span>
+            <label>STR</label><input id="str-score" type="number" value="10" /><input id="str-enh" type="number" placeholder="0" /><span></span>
+            <label>DEX</label><input id="dex-score" type="number" value="10" /><input id="dex-enh" type="number" placeholder="0" /><span></span>
+            <label>CON</label><input id="con-score" type="number" value="10" /><input id="con-enh" type="number" placeholder="0" /><span></span>
+            <label>INT</label><input id="int-score" type="number" value="10" /><input id="int-enh" type="number" placeholder="0" /><span></span>
+            <label>WIS</label><input id="wis-score" type="number" value="10" /><input id="wis-enh" type="number" placeholder="0" /><span></span>
+            <label>CHA</label><input id="cha-score" type="number" value="10" /><input id="cha-enh" type="number" placeholder="0" /><span></span>
+          </div>
+          <p class="hint">"Enh." is any temporary/item bonus (e.g. a Glove of Dex). Score shown as base (effective).</p>
+        </div>
+
+        <div class="panel-card">
+          <h2>Defense &amp; Saves</h2>
+          <div class="field-grid">
+            <label>AC<input id="ac" type="number" value="10" /></label>
+            <label>AC Bonus (item)<input id="acBonus" type="number" placeholder="e.g. 23" /></label>
+            <label>Touch AC<input id="touchAc" type="number" value="10" /></label>
+            <label>Flatfooted AC<input id="flatfootedAc" type="number" value="10" /></label>
+            <label>Fortitude<input id="fortitude" type="number" value="0" /></label>
+            <label>Reflex<input id="reflex" type="number" value="0" /></label>
+            <label>Will<input id="will" type="number" value="0" /></label>
+            <label>Initiative<input id="initiative" type="number" value="0" /></label>
+            <label>Hit Points (Current)<input id="hp" type="number" value="0" /></label>
+            <label>Hit Points (Max)<input id="maxHp" type="number" value="0" /></label>
+            <label>Grapple<input id="grapple" type="number" value="0" /></label>
+            <label>Speed<input id="speed" type="text" placeholder="30 ft" /></label>
+          </div>
+          <label>Misc Save/AC Notes<textarea id="saveNotes" rows="2" placeholder="+2 vs Enchantments, +5 vs Endurance"></textarea></label>
+        </div>
+
+        <div class="panel-card">
+          <h2>Attacks</h2>
+          <div id="attacks-list" class="row-list" data-section="attacks"></div>
+          <button type="button" class="add-row" data-add="attacks">+ Add Attack</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Feats</h2>
+          <div id="feats-list" class="row-list" data-section="feats"></div>
+          <button type="button" class="add-row" data-add="feats">+ Add Feat</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Skills</h2>
+          <div class="row-list-head skills-row">
+            <span>Skill</span><span>Ability</span><span>Ranks</span><span>Synergy/Misc</span><span></span>
+          </div>
+          <div id="skills-list" class="row-list" data-section="skills"></div>
+          <button type="button" class="add-row" data-add="skills">+ Add Skill</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Languages</h2>
+          <label>Languages Known<textarea id="languages" rows="2" placeholder="Common, Elven"></textarea></label>
+        </div>
+
+        <div class="panel-card">
+          <h2>Favored Enemies / Special Bonuses</h2>
+          <div id="favored-list" class="row-list" data-section="favoredEnemies"></div>
+          <button type="button" class="add-row" data-add="favoredEnemies">+ Add Bonus</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Class Features</h2>
+          <div id="classfeatures-list" class="row-list" data-section="classFeatures"></div>
+          <button type="button" class="add-row" data-add="classFeatures">+ Add Feature</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Weapons &amp; Armor</h2>
+          <div id="weapons-list" class="row-list" data-section="weapons"></div>
+          <button type="button" class="add-row" data-add="weapons">+ Add Item</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>General Equipment</h2>
+          <div id="gear-list" class="row-list" data-section="gear"></div>
+          <button type="button" class="add-row" data-add="gear">+ Add Item</button>
+          <div class="field-grid coins-grid">
+            <label>Platinum (PP)<input id="pp" type="number" value="0" /></label>
+            <label>Gold (GP)<input id="gp" type="number" value="0" /></label>
+            <label>Silver (SP)<input id="sp" type="number" value="0" /></label>
+            <label>Copper (CP)<input id="cp" type="number" value="0" /></label>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h2>Spells per Day</h2>
+          <label>Caster Level<input id="casterLevel" type="number" placeholder="0" /></label>
+          <div id="spellslots-list" class="row-list" data-section="spellSlots"></div>
+          <button type="button" class="add-row" data-add="spellSlots">+ Add Level</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Spells Known</h2>
+          <div id="spellsknown-list" class="row-list" data-section="spellsKnown"></div>
+          <button type="button" class="add-row" data-add="spellsKnown">+ Add Spell</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Quiver / Prepared Items</h2>
+          <div id="quiver-list" class="row-list" data-section="quiver"></div>
+          <button type="button" class="add-row" data-add="quiver">+ Add Item</button>
+        </div>
+
+        <div class="panel-card">
+          <h2>Notes</h2>
+          <label><textarea id="notes" rows="4" placeholder="Personality, ideals, campaign hooks..."></textarea></label>
+        </div>
+      </section>
+
+      <section class="sheet-panel" aria-label="Character sheet preview">
+        <div class="sheet-card" id="sheet-preview"></div>
+      </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
