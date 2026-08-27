@@ -28,16 +28,32 @@ export function renderPreview() {
 
   const featsList = state.lists.feats.filter((f) => f.name).map((f) => `<span class="chip">${esc(f.name)}</span>`).join('') || '<span class="muted">—</span>';
 
-  const skillsRows = state.lists.skills
-    .filter((sk) => sk.name)
-    .map((sk) => `<tr><td>${esc(sk.name)}</td><td><strong>${fmtSigned(skillTotal(sk))}</strong></td><td class="skill-sub">${sk.ranks || 0}</td><td class="skill-sub">${fmtSigned(sk.misc || 0)}</td><td class="skill-sub">${sk.ability ? sk.ability.toUpperCase() : '—'}</td></tr>`)
+  const skillOrder = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+  const skillsByAbil = {};
+  state.lists.skills.filter((sk) => sk.name).forEach((sk) => {
+    const key = sk.ability ? sk.ability.toLowerCase() : 'other';
+    if (!skillsByAbil[key]) skillsByAbil[key] = [];
+    skillsByAbil[key].push(sk);
+  });
+  const skillsRows = [...skillOrder, 'other']
+    .filter((ab) => skillsByAbil[ab])
+    .flatMap((ab) => {
+      const label = ab === 'other' ? 'Other' : ab.toUpperCase();
+      const header = `<tr class="skill-ability-header"><td colspan="5">${label}</td></tr>`;
+      const rows = skillsByAbil[ab].map((sk) => {
+        const abilMod = sk.ability ? getModifier(effectiveScore(sk.ability)) : 0;
+        return `<tr><td>${esc(sk.name)}</td><td><strong>${fmtSigned(skillTotal(sk))}</strong></td><td class="skill-sub">${sk.ranks || 0}</td><td class="skill-sub">${fmtSigned(abilMod)}</td><td class="skill-sub">${fmtSigned(sk.misc || 0)}</td></tr>`;
+      });
+      return [header, ...rows];
+    })
     .join('');
 
   const favoredRows = state.lists.favoredEnemies.filter((f) => f.enemy).map((f) => `<div><span>${esc(f.enemy)}</span><strong>${esc(f.bonus)}</strong></div>`).join('') || '<span class="muted">—</span>';
 
   const classFeatureRows = state.lists.classFeatures.filter((c) => c.name).map((c) => `<div class="cf-item"><p class="cf-title">${esc(c.name)}</p>${c.description ? `<p class="cf-desc">• ${esc(c.description)}</p>` : ''}</div>`).join('') || '<p class="muted">—</p>';
 
-  const weaponsList = state.lists.weapons.filter((w) => w.name).map((w) => `<li>${esc(w.name)}</li>`).join('') || '<li class="muted">—</li>';
+  const weaponsList = state.lists.weapons.filter((w) => w.name && !/wand/i.test(w.name)).map((w) => `<li>${esc(w.name)}</li>`).join('') || '<li class="muted">—</li>';
+  const wandsHtml = state.lists.weapons.filter((w) => w.name && /wand/i.test(w.name)).map((w) => `<div class="wand-item"><span>${esc(w.name)}</span><span class="charges-label">Charges:</span><span class="charges-box"></span></div>`).join('');
   const gearList = state.lists.gear.filter((g) => g.name).map((g) => `<li>${esc(g.name)}</li>`).join('') || '<li class="muted">—</li>';
 
   const slotsByLevel = {};
@@ -60,6 +76,11 @@ export function renderPreview() {
     return `<tr><td class="qty-box"></td><td>${label}</td></tr>`;
   }).join('');
   const blankQuiverRows = Array(3).fill('<tr><td class="qty-box"></td><td>&nbsp;</td></tr>').join('');
+
+  const fortTotal = Number(s.fortBase || 0) + getModifier(effectiveScore('con'));
+  const refTotal  = Number(s.refBase  || 0) + getModifier(effectiveScore('dex'));
+  const willTotal = Number(s.willBase || 0) + getModifier(effectiveScore('wis'));
+  const initTotal = getModifier(effectiveScore('dex')) + Number(s.initMisc || 0);
 
   const hpDisplay = `${esc(s.hp) || 0}${s.maxHp ? ` (${esc(s.maxHp)})` : ''}`;
   const combatHpInput = `<input id="combat-hp" class="combat-hp-input" type="text" inputmode="numeric" value="${esc(s.combatHp || '')}" title="Current HP — edit during combat" />`;
@@ -99,10 +120,10 @@ export function renderPreview() {
           <table class="sheet-table defense-table">
             <tbody>
               <tr><th>AC</th><td>${esc(s.ac) || 10}${s.acBonus ? ` (${esc(s.acBonus)})` : ''}</td></tr>
-              <tr><th>Fortitude</th><td>${fmtSigned(s.fortitude)}</td></tr>
-              <tr><th>Reflex</th><td>${fmtSigned(s.reflex)}</td></tr>
-              <tr><th>Will</th><td>${fmtSigned(s.will)}</td></tr>
-              <tr><th>Initiative</th><td>${fmtSigned(s.initiative)}</td></tr>
+              <tr><th>Fortitude</th><td>${fmtSigned(fortTotal)}</td></tr>
+              <tr><th>Reflex</th><td>${fmtSigned(refTotal)}</td></tr>
+              <tr><th>Will</th><td>${fmtSigned(willTotal)}</td></tr>
+              <tr><th>Initiative</th><td>${fmtSigned(initTotal)}</td></tr>
               <tr><th>Hit Points</th><td class="hp-track-cell"><span>${hpDisplay}</span>${combatHpInput}</td></tr>
             </tbody>
           </table>
@@ -131,7 +152,7 @@ export function renderPreview() {
       <div class="skills-and-sidebar">
         <div class="sheet-section">
           <h3>Skills</h3>
-          <table class="sheet-table"><thead><tr><th>Skill</th><th>Total</th><th>Ranks</th><th>Misc</th><th>Ability</th></tr></thead>
+          <table class="sheet-table"><thead><tr><th>Skill</th><th>Total</th><th>Ranks</th><th>Ability</th><th>Synergy/Feat</th></tr></thead>
           <tbody>${skillsRows || '<tr><td colspan="5" class="muted">—</td></tr>'}</tbody></table>
         </div>
         <div class="sheet-col">
@@ -151,6 +172,7 @@ export function renderPreview() {
       <div class="sheet-section">
         <h3>Weapons &amp; Armor</h3>
         <ul class="sheet-list">${weaponsList}</ul>
+        ${wandsHtml}
       </div>
 
       <div class="sheet-section">

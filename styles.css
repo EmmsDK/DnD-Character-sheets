@@ -550,7 +550,7 @@ textarea {
 /* Larger font for Attacks — header and rows */
 .attacks-table th,
 .attacks-table td {
-  font-size: 1.05rem;
+  font-size: 1.0rem;
 }
 
 /* Spacer row between melee and ranged attack groups */
@@ -563,6 +563,18 @@ textarea {
 /* Skills sub-columns (Ranks, Misc, Ability) darker tint */
 .skill-sub {
   background: rgba(141, 93, 28, 0.14);
+}
+
+/* Ability group header row in skills table */
+.skill-ability-header td {
+  background: transparent;
+  color: #a07840;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.5rem 0.15rem;
+  border-bottom: 1px solid rgba(141, 93, 28, 0.35);
 }
 
 /* Hit points row — value left, tracker box right */
@@ -700,6 +712,38 @@ textarea {
 .spell-desc {
   color: #5a452a;
   vertical-align: top;
+}
+
+/* Wand item with charges box */
+.wand-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(95, 62, 24, 0.15);
+  font-size: 0.84rem;
+  color: #5a452a;
+}
+
+.charges-label {
+  color: #7a4b13;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.charges-box {
+  display: inline-block;
+  width: 2.5rem;
+  height: 1.1rem;
+  border: 1.5px solid rgba(95, 62, 24, 0.5);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 /* Writable quantity box in quiver */
@@ -882,7 +926,7 @@ textarea {
 
   .attacks-table th,
   .attacks-table td {
-    font-size: 0.75rem;
+    font-size: 0.85rem !important;
   }
 
   .combat-hp-input {
@@ -904,6 +948,13 @@ textarea {
     background: rgba(141, 93, 28, 0.18) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  .skill-ability-header td {
+    background: transparent !important;
+    font-size: 0.5rem !important;
+    padding: 0.12rem 0.3rem 0.08rem !important;
+    border-bottom: 1px solid rgba(141, 93, 28, 0.35) !important;
   }
 
   .defense-headers {
@@ -963,6 +1014,23 @@ textarea {
 
   .sheet-list li:not(:last-child)::after {
     content: ", ";
+  }
+
+  .wand-item {
+    font-size: 0.6rem;
+    margin-top: 0.2rem;
+    padding-top: 0.15rem;
+    gap: 0.2rem;
+  }
+
+  .charges-label {
+    font-size: 0.56rem;
+  }
+
+  .charges-box {
+    width: 2.0rem;
+    height: 1.5rem;
+    border-radius: 1px;
   }
 
   .sheet-list::after {

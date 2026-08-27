@@ -3,7 +3,7 @@
     "name": "Tommen",
     "race": "Half-Elf",
     "alignment": "Neutral",
-    "className": "Ranger (8)",
+    "className": "Ranger (9)",
     "height": "6'4",
     "weight": "170 lbs",
     "str-score": "16",
@@ -22,10 +22,10 @@
     "acBonus": "23",
     "touchAc": "17",
     "flatfootedAc": "15",
-    "fortitude": "8",
-    "reflex": "9",
-    "will": "5",
-    "initiative": "6",
+    "fortBase": "6",
+    "refBase": "3",
+    "willBase": "3",
+    "initMisc": "0",
     "hp": "60",
     "maxHp": "70",
     "grapple": "10",
@@ -92,7 +92,8 @@
       { "name": "Armor of the Shadow Warriors" },
       { "name": "Bag of Holding II (500 lbs)" },
       { "name": "Ring of Protection +1" },
-      { "name": "Amulet of Const +2" }
+      { "name": "Amulet of Const +2" },
+      { "name": "Cure Light Wand (1d8+1)" }
     ],
     "gear": [
       { "name": "Blackpack" },
@@ -138,8 +139,7 @@
       { "name": "Holy Arrow",        "count": "", "description": "" },
       { "name": "Explosive Arrow",   "count": "", "description": "" },
       { "name": "Acid Arrow",        "count": "", "description": "" },
-      { "name": "Bullet",            "count": "", "description": "" },
-      { "name": "Cure Light Wand",   "count": "", "description": "1d8+1" }
+      { "name": "Bullet",            "count": "", "description": "" }
     ]
   }
 }

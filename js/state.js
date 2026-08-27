@@ -76,8 +76,8 @@ export const STATIC_IDS = [
   'name', 'race', 'alignment', 'className', 'height', 'weight',
   'str-score', 'str-enh', 'dex-score', 'dex-enh', 'con-score', 'con-enh',
   'int-score', 'int-enh', 'wis-score', 'wis-enh', 'cha-score', 'cha-enh',
-  'ac', 'acBonus', 'touchAc', 'flatfootedAc', 'fortitude', 'reflex', 'will',
-  'initiative', 'hp', 'maxHp', 'grapple', 'speed', 'saveNotes',
+  'ac', 'acBonus', 'touchAc', 'flatfootedAc', 'fortBase', 'refBase', 'willBase',
+  'initMisc', 'hp', 'maxHp', 'grapple', 'speed', 'saveNotes',
   'languages', 'pp', 'gp', 'sp', 'cp', 'notes', 'casterLevel',
 ];
 
