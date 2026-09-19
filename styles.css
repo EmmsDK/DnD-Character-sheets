@@ -562,7 +562,7 @@ textarea {
 
 /* Skills sub-columns (Ranks, Misc, Ability) darker tint */
 .skill-sub {
-  background: rgba(141, 93, 28, 0.14);
+  background: rgba(120, 120, 120, 0.14);
 }
 
 /* Ability group header row in skills table */
@@ -843,6 +843,10 @@ textarea {
     line-height: 1.15;
   }
 
+  .sheet-card * {
+    color: black !important;
+  }
+
   .sheet-section,
   .sheet-header {
     background: white;
@@ -945,7 +949,7 @@ textarea {
   }
 
   .skill-sub {
-    background: rgba(141, 93, 28, 0.18) !important;
+    background: rgba(120, 120, 120, 0.18) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
